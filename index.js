@@ -4,7 +4,6 @@ document.getElementById('searchButton').addEventListener('click', function(){
     fetch('https://api.lyrics.ovh/suggest/' + searchValue)
     .then(response => response.json())
     .then(data => findLyrics(data))
-
     function findLyrics(info){
 
         for (let i = 0; i <  10; i++) {
@@ -16,11 +15,8 @@ document.getElementById('searchButton').addEventListener('click', function(){
             let artistNameElement = document.createElement('span');
                 artistNameElement = artistName.innerHTML = artistName;
             
-            // const songId = info.data[i].id;
-            // console.log(songId);
-            
-           
-
+            // creating element for showing song info
+                
             const paragraph = document.createElement('p');
                 paragraph.innerHTML = '';
                 paragraph.innerHTML += `<div class = "lyrics-info">
@@ -31,7 +27,7 @@ document.getElementById('searchButton').addEventListener('click', function(){
                                                         <p class="author lead">Album by <span>${artistNameElement}</span></p>
                                                     </div>
                                                     <div class="col-md-3 text-md-right text-center">
-                                                        <button  class="btn btn-success lyrics">Get Lyrics</button>
+                                                        <button  class="btn btn-success get-lyrics">Get Lyrics</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -40,42 +36,40 @@ document.getElementById('searchButton').addEventListener('click', function(){
             const parent = document.getElementById('song');
             parent.appendChild(paragraph);
 
-            
+             // get lyrics from api
 
-           
-
-             // get lyrics
            fetch('https://api.lyrics.ovh/v1/' + artistName + '/' + songTitle + '/')
            .then( res => res.json())
            .then( data => lyricsName(data))
+
+
            function lyricsName(info){
                const lyrics = info.lyrics;
                const parentElement = document.getElementById('lyrics');
+
+            // creating elements for storing lyrics
+
                const lyricsText = document.createElement('p');
                   lyricsText.innerHTML += ` <div class="single-lyrics text-center lyric">
                                                 <h2 class="text-success mb-4 song-title">${songTitle}</h2>
-                                                <pre class="text-white"> ${lyrics} </pre>
+                                                <pre class="lyrics-text text-white"> ${lyrics} </pre>
                                             </>`;
               parentElement.appendChild(lyricsText);
            }
 
-            const buttons = document.getElementsByClassName('lyrics');
+            const buttons = document.getElementsByClassName('get-lyrics');
             
             buttons[i].onclick = function(){
                 const lyric = document.querySelectorAll('.lyric')[i];
                 const parent = document.querySelectorAll('.lyrics-info')[i];
                 parent.appendChild(lyric);
                 lyric.style.display = 'block';
-               // lyric.style.display = 'none';
             }
-
-
         }
-        console.log(info);
-    }
-
-        
-   
-    
+               
+    }  
+    document.getElementById('search').value = '';
 })
+
+  
 
