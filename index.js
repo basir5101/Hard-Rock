@@ -7,7 +7,7 @@ document.getElementById('submitButton').addEventListener('click', function(){
 
     function songInfo(info){
 
-        for (let i = 0; i <=  10; i++) {
+        for (let i = 0; i <  10; i++) {
             const songTitle = info.data[i].title;
             let songTitleElement = document.createElement('strong');
                 songTitleElement = songTitleElement.innerHTML = songTitle;
@@ -15,6 +15,11 @@ document.getElementById('submitButton').addEventListener('click', function(){
             const artistName = info.data[i].artist.name;
             let artistNameElement = document.createElement('span');
                 artistNameElement = artistName.innerHTML = artistName;
+            
+            const songId = info.data[i].id;
+            console.log(songId);
+            
+           
 
             const paragraph = document.createElement('p');
                 //paragraph.innerHTML = '';
@@ -25,13 +30,29 @@ document.getElementById('submitButton').addEventListener('click', function(){
                                                     <p class="author lead">Album by <span>${artistNameElement}</span></p>
                                                 </div>
                                                 <div class="col-md-3 text-md-right text-center">
-                                                    <button class="btn btn-success">Get Lyrics</button>
+                                                    <button onclick = "showLyrics(${songId})" class="btn btn-success">Get Lyrics</button>
                                                 </div>
                                             </div>
                                         </div>` 
             const parent = document.getElementById('song');
             parent.appendChild(paragraph);
+
+             // get lyrics
+           fetch('https://api.lyrics.ovh/v1/' + artistName + '/' + songTitle + '/')
+           .then( res => res.json())
+           .then( data => lyricsName(data))
+           function lyricsName(info){
+               const lyrics = info.lyrics;
+               const parentElement = document.getElementById('lyrics');
+               const lyricsText = document.createElement('p');
+                  lyricsText.innerHTML += ` <div class="single-lyrics text-center">
+                                                <h2 class="text-success mb-4">${songTitle}</h2>
+                                                <pre class="lyric text-white"> ${lyrics} </pre>
+                                            </div>`;
+              parentElement.appendChild(lyricsText);
+           }
         }
         console.log(info);
     }
 })
+
